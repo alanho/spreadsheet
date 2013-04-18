@@ -1165,6 +1165,13 @@ class Reader
     end
     # TODO: Row spacing
     worksheet.set_row_address index, attrs
+
+    if index > 32 && index % 32 == 1
+      opts = worksheet.instance_eval { @row_addresses[index-1] }
+      opts[:row_block] = @current_row_block_offset
+      opts[:offset] = @current_row_block_offset[0]
+      worksheet.set_row_address index-1, opts
+    end #HACK
   end
   def setup io
     ## Reading from StringIO fails without forced encoding
